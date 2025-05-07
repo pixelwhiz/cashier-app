@@ -1,16 +1,16 @@
 {
-  "name": "pern-project-backend",
+  "name": "cashier-app-backend",
   "version": "1.0.0",
   "description": "backend for pern stack, uses postgres, node.js and express.js",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "json-server --watch db.json --port=3004"
   },
   "keywords": [
     "pern-stack",
     "pern"
   ],
-  "author": "Harry Moreno",
+  "author": "pixelwhiz",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

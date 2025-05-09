@@ -2,9 +2,10 @@ import {Col, Row} from "react-bootstrap";
 import {Result, Categories, NavbarComponent, Menus} from "./components/Index.jsx";
 import Container from "react-bootstrap/Container";
 
-import React, {Component} from 'react';
 import axios from "axios";
 import {API_URL} from "./utils/constant.js";
+import {Component} from "react";
+import swal from "sweetalert";
 
 class App extends Component {
 
@@ -13,7 +14,8 @@ class App extends Component {
 
         this.state = {
             menus: [],
-            selectedCategory: 'Makanan'
+            selectedCategory: 'Makanan',
+            keranjangs: [],
         }
     }
 
@@ -26,7 +28,31 @@ class App extends Component {
             })
             .catch(error => {
                 console.log(error)
+            });
+
+        axios
+            .get(API_URL + "keranjangs")
+            .then((res) => {
+                const keranjangs = res.data;
+                this.setState({ keranjangs });
             })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    componentDidUpdate(prevState) {
+        if (this.state.keranjangs !== prevState.keranjangs) {
+            axios
+                .get(API_URL + "keranjangs")
+                .then((res) => {
+                    const keranjangs = res.data;
+                    this.setState({ keranjangs });
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
     }
 
     changeCategory = (value) => {
@@ -46,9 +72,64 @@ class App extends Component {
             })
     }
 
+    addCart = (value) => {
+
+        axios
+            .get(API_URL + "keranjangs?product.id="+value.id)
+            .then(res => {
+                if (res.data.length === 0) {
+
+                    const cart = {
+                        jumlah: 1,
+                        total_harga: value.harga,
+                        product: value,
+                    }
+
+                    axios
+                        .post(API_URL + "keranjangs", cart)
+                        .then((res) => {
+                            swal({
+                                title: "Sukses Masuk Keranjang",
+                                text: "Sukses Masuk Keranjang "+cart.product.nama,
+                                icon: "success",
+                                button: "false",
+                                timer: 1000,
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+                } else {
+                    const cart = {
+                        jumlah: res.data[0].jumlah+1,
+                        total_harga: res.data[0].total_harga+value.harga,
+                        product: value,
+                    }
+
+                    axios
+                        .put(API_URL + "keranjangs/" + res.data[0].id, cart)
+                        .then((res) => {
+                            swal({
+                                title: "Sukses Masuk Keranjang",
+                                text: "Sukses Masuk Keranjang "+cart.product.nama,
+                                icon: "success",
+                                button: "false",
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     render() {
 
-        const { menus, selectedCategory } = this.state;
+        const { menus, selectedCategory, keranjangs } = this.state;
 
         return (
             <div className={"App"}>
@@ -65,11 +146,12 @@ class App extends Component {
                                         <Menus
                                             key={menu.id}
                                             menu={menu}
+                                            addCart={this.addCart}
                                         />
                                     ))}
                                 </Row>
                             </Col>
-                            <Result />
+                            <Result keranjangs={keranjangs} />
                         </Row>
                     </Container>
                 </div>

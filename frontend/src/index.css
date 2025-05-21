@@ -18,6 +18,10 @@ body {
     color: #fff;
 }
 
+.btn-primary {
+    background-color: #22668A;
+}
+
 code {
     font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", Monospaced;
 }

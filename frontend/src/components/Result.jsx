@@ -1,6 +1,7 @@
 import {Badge, Col, ListGroup, Row} from "react-bootstrap";
 import {Component} from "react";
 import {numberWithCommas} from "../utils/Utils.js";
+import TotalPrice from "./TotalPrice.jsx";
 
 export default class Result extends Component {
     render() {
@@ -43,6 +44,8 @@ export default class Result extends Component {
                 ) : (
                     <p>Keranjang kosong</p>
                 )}
+
+                <TotalPrice keranjangs={keranjangs} {...this.props} />
             </Col>
         )
     }

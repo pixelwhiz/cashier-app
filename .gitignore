@@ -1,2 +1,4 @@
 *.swp
 .tool-versions
+frontend/node_modules
+backend/node_modules

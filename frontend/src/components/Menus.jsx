@@ -20,6 +20,7 @@ const Menus = ({ menu, addCart }) => {
                     <Card.Title>{menu.nama} <strong>({menu.kode})</strong></Card.Title>
                     <Card.Text>
                         Rp. {numberWithCommas(menu.harga)}
+
                     </Card.Text>
                     <Button variant="primary">Go somewhere</Button>
                 </Card.Body>
